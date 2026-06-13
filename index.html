@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Coaching Tool — U12s</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/print.css" media="print" />
+</head>
+<body>
+
+  <header class="app-header">
+    <h1 class="app-title">U12s Coaching Tool</h1>
+    <nav class="app-nav">
+      <button class="nav-btn nav-btn--active" data-view="zones">Zone Reference</button>
+      <button class="nav-btn" data-view="plays">Passages of Play</button>
+    </nav>
+    <div class="app-controls">
+      <select id="formation-select" aria-label="Select formation">
+        <option value="2-4-2">2-4-2</option>
+        <option value="3-4-1">3-4-1</option>
+      </select>
+      <button id="print-btn" class="btn-print" aria-label="Print or save as PDF">🖨 Print</button>
+    </div>
+  </header>
+
+  <!-- Zone Reference View -->
+  <main id="view-zones" class="view view--active">
+    <div id="pitch-container" class="pitch-container" aria-label="Tap a zone to learn about it"></div>
+    <aside id="zone-panel" class="panel panel--hidden" role="complementary" aria-label="Zone details">
+      <button id="zone-panel-close" class="panel-close" aria-label="Close panel">✕</button>
+      <h2 id="zone-panel-name" class="panel-title"></h2>
+      <section class="panel-section">
+        <h3 class="panel-section-title">In Possession</h3>
+        <p id="zone-panel-possession"></p>
+      </section>
+      <section class="panel-section">
+        <h3 class="panel-section-title">Out of Possession</h3>
+        <p id="zone-panel-defence"></p>
+      </section>
+      <section class="panel-section">
+        <h3 class="panel-section-title">Coaching Principle</h3>
+        <blockquote id="zone-panel-principle"></blockquote>
+      </section>
+    </aside>
+  </main>
+
+  <!-- Passages of Play View -->
+  <main id="view-plays" class="view view--hidden">
+    <div class="plays-layout">
+      <nav id="plays-list" class="plays-nav" aria-label="Plays library"></nav>
+      <div class="play-viewer">
+        <div id="play-diagram" class="play-diagram" aria-label="Play diagram"></div>
+        <div id="play-detail" class="play-detail"></div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

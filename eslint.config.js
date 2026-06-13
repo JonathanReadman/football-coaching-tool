@@ -10,6 +10,7 @@ export default [
         console: 'readonly',
         document: 'readonly',
         window: 'readonly',
+        Event: 'readonly',
       },
     },
   },

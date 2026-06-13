@@ -70,7 +70,7 @@ export const ZONES = [
     channel: 'central',
     positions: {
       '2-4-2': ['CDM', 'CM'],
-      '3-4-1': ['CM', 'CM'],
+      '3-4-1': ['CM', 'CM2'],
     },
     inPossession:
       'CDM: be available short from defenders at all times — play simple, keep possession, play sideways if under pressure. Do not go forward without covering cover behind you. CM: look to break lines with a through ball or dribble, arrive late into the attacking zone.',

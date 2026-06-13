@@ -1,0 +1,3 @@
+#!/bin/sh
+npx lint-staged
+npx vitest run --reporter=verbose --passWithNoTests

@@ -5,3 +5,6 @@ _site/
 .superpowers/
 coverage/
 *.local
+.env
+.env.*
+.husky/_/

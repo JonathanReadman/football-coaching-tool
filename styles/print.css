@@ -1,0 +1,42 @@
+@media print {
+  /* Hide everything except the active view and pitch */
+  .app-header,
+  .app-nav,
+  .app-controls,
+  .panel-close,
+  #view-plays { display: none !important; }
+
+  #view-zones {
+    display: block !important;
+    height: auto;
+    overflow: visible;
+  }
+
+  .pitch-container {
+    width: 100%;
+    height: auto;
+  }
+
+  .pitch-container svg {
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+
+  .panel {
+    display: block !important;
+    width: 100%;
+    border: none;
+    padding: 0;
+    margin-top: 16px;
+  }
+
+  body { background: #fff; color: #000; }
+  .pitch__bg { fill: #c8e6c9; }
+  .pitch__line { stroke: rgba(0,0,0,0.3); }
+  .pitch__zone { fill: rgba(0,0,0,0.03); stroke: rgba(0,0,0,0.15); }
+  .zone--active { fill: rgba(250,204,21,0.2) !important; stroke: #b45309; }
+  .pitch__player { fill: #1d4ed8; }
+  .pitch__player-label { fill: #fff; }
+  blockquote { border-left-color: #b45309; }
+}

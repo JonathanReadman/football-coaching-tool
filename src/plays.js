@@ -85,12 +85,12 @@ export const PLAYS = [
       {
         description: 'On the signal, the whole team steps up 10 yards.',
         positions: {
-          '2-4-2': {
+          '2-4-2': { ...D242,
             GK: { x: 150, y: 170 }, LB: { x: 55, y: 145 }, RB: { x: 245, y: 145 },
             LM: { x: 25, y: 82 }, CDM: { x: 110, y: 97 }, CM: { x: 190, y: 70 },
             RM: { x: 275, y: 82 }, LF: { x: 65, y: 12 }, RF: { x: 235, y: 12 },
           },
-          '3-4-1': {
+          '3-4-1': { ...D341,
             GK: { x: 150, y: 170 }, LCB: { x: 65, y: 140 }, CB: { x: 150, y: 145 },
             RCB: { x: 235, y: 140 }, LM: { x: 25, y: 82 }, CM: { x: 110, y: 77 },
             CM2: { x: 190, y: 77 }, RM: { x: 275, y: 82 }, AM: { x: 150, y: 15 },
@@ -100,12 +100,12 @@ export const PLAYS = [
       {
         description: 'CB plays long — LB positions to win the header in zone 7.',
         positions: {
-          '2-4-2': {
+          '2-4-2': { ...D242,
             GK: { x: 150, y: 170 }, LB: { x: 55, y: 138 }, RB: { x: 245, y: 145 },
             LM: { x: 25, y: 82 }, CDM: { x: 110, y: 97 }, CM: { x: 190, y: 70 },
             RM: { x: 275, y: 82 }, LF: { x: 65, y: 12 }, RF: { x: 235, y: 12 },
           },
-          '3-4-1': {
+          '3-4-1': { ...D341,
             GK: { x: 150, y: 170 }, LCB: { x: 65, y: 138 }, CB: { x: 150, y: 145 },
             RCB: { x: 235, y: 140 }, LM: { x: 25, y: 82 }, CM: { x: 110, y: 77 },
             CM2: { x: 190, y: 77 }, RM: { x: 275, y: 82 }, AM: { x: 150, y: 15 },
@@ -115,12 +115,12 @@ export const PLAYS = [
       {
         description: 'CDM covers behind LB — ready to collect the second ball.',
         positions: {
-          '2-4-2': {
+          '2-4-2': { ...D242,
             GK: { x: 150, y: 170 }, LB: { x: 55, y: 138 }, RB: { x: 245, y: 145 },
             LM: { x: 25, y: 82 }, CDM: { x: 95, y: 152 }, CM: { x: 190, y: 70 },
             RM: { x: 275, y: 82 }, LF: { x: 65, y: 12 }, RF: { x: 235, y: 12 },
           },
-          '3-4-1': {
+          '3-4-1': { ...D341,
             GK: { x: 150, y: 170 }, LCB: { x: 65, y: 138 }, CB: { x: 150, y: 145 },
             RCB: { x: 235, y: 140 }, LM: { x: 25, y: 82 }, CM: { x: 95, y: 150 },
             CM2: { x: 190, y: 77 }, RM: { x: 275, y: 82 }, AM: { x: 150, y: 15 },
@@ -142,7 +142,7 @@ export const PLAYS = [
         positions: { '2-4-2': { ...D242 }, '3-4-1': { ...D341 } },
       },
       {
-        description: 'LF sprints to close the GK — angle the run to block the easy pass.',
+        description: 'LF/AM sprints to close the GK — angle the run to block the easy pass.',
         positions: {
           '2-4-2': { ...D242, LF: { x: 140, y: 12 } },
           '3-4-1': { ...D341, AM: { x: 140, y: 12 } },

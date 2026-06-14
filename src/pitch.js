@@ -42,7 +42,7 @@ export function createPitchSVG(formation, activeZoneId, onZoneClick) {
       'data-zone': String(id),
       class: `pitch__zone${id === activeZoneId ? ' zone--active' : ''}`,
     })
-    r.addEventListener('click', () => onZoneClick(id))
+    r.addEventListener('click', (e) => { e.stopPropagation(); onZoneClick(id) })
     svg.appendChild(r)
   }
 

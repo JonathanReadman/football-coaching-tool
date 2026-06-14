@@ -1,8 +1,7 @@
 import { createPitchSVG } from './pitch.js'
 import { getZone } from './zones.js'
 import { PLAYS, THEMES } from './plays.js'
-import { showZonePanel, hideZonePanel, renderPlaysLibrary, showPlayDiagram } from './ui.js'
-import { triggerPrint } from './pdf.js'
+import { showZonePanel, hideZonePanel, renderPlaysView, showPlayView } from './ui.js'
 
 let currentFormation = '2-4-2'
 let activeZoneId = null
@@ -26,23 +25,28 @@ function switchView(viewName) {
     v.classList.toggle('view--active', v.id === `view-${viewName}`)
     v.classList.toggle('view--hidden', v.id !== `view-${viewName}`)
   })
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.classList.toggle('nav-btn--active', btn.dataset.view === viewName)
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.toggle('tab-btn--active', btn.dataset.view === viewName)
+  })
+}
+
+function refreshPlaysView() {
+  renderPlaysView(PLAYS, THEMES, currentFormation, (playId) => {
+    const play = PLAYS.find(p => p.id === playId)
+    if (play) showPlayView(play, currentFormation, () => {})
   })
 }
 
 function init() {
   renderPitch()
+  refreshPlaysView()
 
-  renderPlaysLibrary(PLAYS, THEMES, currentFormation, (playId) => {
-    const play = PLAYS.find(p => p.id === playId)
-    if (play) showPlayDiagram(play, currentFormation)
-  })
-
-  document.getElementById('zone-panel-close').addEventListener('click', () => {
-    activeZoneId = null
-    hideZonePanel()
-    renderPitch()
+  document.getElementById('pitch-container').addEventListener('click', () => {
+    if (!document.getElementById('zone-panel').classList.contains('panel--hidden')) {
+      activeZoneId = null
+      hideZonePanel()
+      renderPitch()
+    }
   })
 
   document.getElementById('formation-select').addEventListener('change', (e) => {
@@ -50,17 +54,14 @@ function init() {
     activeZoneId = null
     hideZonePanel()
     renderPitch()
-    renderPlaysLibrary(PLAYS, THEMES, currentFormation, (playId) => {
-      const play = PLAYS.find(p => p.id === playId)
-      if (play) showPlayDiagram(play, currentFormation)
+    refreshPlaysView()
+  })
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.view) switchView(btn.dataset.view)
     })
   })
-
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => switchView(btn.dataset.view))
-  })
-
-  document.getElementById('print-btn').addEventListener('click', triggerPrint)
 }
 
 init()

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { createPitchSVG, updatePlayerPositions } from '../pitch.js'
+import { createPitchSVG, updatePlayerPositions, drawMovementArrows } from '../pitch.js'
 
 describe('createPitchSVG', () => {
   it('returns an SVGElement', () => {
@@ -83,5 +83,46 @@ describe('updatePlayerPositions', () => {
     const rbBefore = svg.querySelector('[data-player="RB"]').getAttribute('transform')
     updatePlayerPositions(svg, { GK: { x: 1, y: 1 } })
     expect(svg.querySelector('[data-player="RB"]').getAttribute('transform')).toBe(rbBefore)
+  })
+})
+
+describe('drawMovementArrows', () => {
+  it('draws a line for each player that moved', () => {
+    const svg = createPitchSVG('2-4-2', null, () => {})
+    const from = { GK: { x: 150, y: 188 }, LB: { x: 55, y: 163 } }
+    const to   = { GK: { x: 150, y: 188 }, LB: { x: 55, y: 172 } }
+    drawMovementArrows(svg, from, to)
+    const lines = svg.querySelectorAll('.movement-arrow')
+    expect(lines).toHaveLength(1) // GK didn't move; only LB gets an arrow
+  })
+
+  it('clears previous arrows before drawing new ones', () => {
+    const svg = createPitchSVG('2-4-2', null, () => {})
+    const pos1 = { LB: { x: 55, y: 163 } }
+    const pos2 = { LB: { x: 55, y: 172 } }
+    const pos3 = { LB: { x: 55, y: 185 } }
+    drawMovementArrows(svg, pos1, pos2)
+    drawMovementArrows(svg, pos2, pos3)
+    expect(svg.querySelectorAll('.movement-arrows')).toHaveLength(1)
+  })
+
+  it('draws no lines when fromPositions is null (clears only)', () => {
+    const svg = createPitchSVG('2-4-2', null, () => {})
+    const from = { LB: { x: 55, y: 163 } }
+    const to   = { LB: { x: 55, y: 172 } }
+    drawMovementArrows(svg, from, to)
+    drawMovementArrows(svg, null, to)
+    expect(svg.querySelectorAll('.movement-arrow')).toHaveLength(0)
+  })
+
+  it('inserts the arrow group before player tokens', () => {
+    const svg = createPitchSVG('2-4-2', null, () => {})
+    const from = { LB: { x: 55, y: 163 } }
+    const to   = { LB: { x: 55, y: 172 } }
+    drawMovementArrows(svg, from, to)
+    const children = Array.from(svg.children)
+    const arrowGroupIdx = children.findIndex(el => el.classList.contains('movement-arrows'))
+    const firstPlayerIdx = children.findIndex(el => el.getAttribute('data-player'))
+    expect(arrowGroupIdx).toBeLessThan(firstPlayerIdx)
   })
 })

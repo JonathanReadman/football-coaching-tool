@@ -1,4 +1,4 @@
-import { createPitchSVG, updatePlayerPositions } from './pitch.js'
+import { createPitchSVG, updatePlayerPositions, drawMovementArrows } from './pitch.js'
 
 /**
  * @param {import('./zones.js').Zone} zone
@@ -72,6 +72,7 @@ export function showPlayView(play, formation, onBack) {
   diagramEl.appendChild(svg)
 
   let currentStep = 0
+  let prevPositions = null
 
   function updateStep(index) {
     currentStep = index
@@ -80,6 +81,11 @@ export function showPlayView(play, formation, onBack) {
     descriptionEl.textContent = step.description
     document.getElementById('play-prev-btn').disabled = currentStep === 0
     document.getElementById('play-next-btn').disabled = currentStep === play.steps.length - 1
+
+    const positions = step.positions[formation]
+    drawMovementArrows(svg, prevPositions, positions)
+    prevPositions = positions ? { ...positions } : null
+
     renderPlayStep(svg, play, currentStep, formation)
   }
 

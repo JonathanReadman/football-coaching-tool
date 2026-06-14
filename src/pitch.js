@@ -22,6 +22,21 @@ export function createPitchSVG(formation, activeZoneId, onZoneClick) {
     'aria-label': 'Football pitch with 9 zones',
   })
 
+  // Arrowhead marker for movement arrows
+  const defs = svgEl('defs', {})
+  const marker = svgEl('marker', {
+    id: 'movement-arrowhead',
+    markerWidth: '6',
+    markerHeight: '4',
+    refX: '5',
+    refY: '2',
+    orient: 'auto',
+  })
+  const arrowPolygon = svgEl('polygon', { points: '0 0, 6 2, 0 4', class: 'movement-arrowhead' })
+  marker.appendChild(arrowPolygon)
+  defs.appendChild(marker)
+  svg.appendChild(defs)
+
   // Pitch background
   svg.appendChild(svgEl('rect', { x: '0', y: '0', width: '300', height: '200', class: 'pitch__bg' }))
 
@@ -77,5 +92,50 @@ export function updatePlayerPositions(svg, positions) {
   for (const [id, pos] of Object.entries(positions)) {
     const g = svg.querySelector(`[data-player="${id}"]`)
     if (g) g.setAttribute('transform', `translate(${pos.x},${pos.y})`)
+  }
+}
+
+/**
+ * Draw movement arrows from fromPositions to toPositions. Clears any existing
+ * arrows first. Pass null for fromPositions to just clear.
+ * @param {SVGElement} svg
+ * @param {Record<string, {x: number, y: number}> | null} fromPositions
+ * @param {Record<string, {x: number, y: number}>} toPositions
+ */
+export function drawMovementArrows(svg, fromPositions, toPositions) {
+  const existing = svg.querySelector('.movement-arrows')
+  if (existing) existing.remove()
+  if (!fromPositions) return
+
+  const g = svgEl('g', { class: 'movement-arrows' })
+  const R = 10 // offset from player centre (radius 8 + gap)
+
+  for (const [id, to] of Object.entries(toPositions)) {
+    const from = fromPositions[id]
+    if (!from) continue
+    const dx = to.x - from.x
+    const dy = to.y - from.y
+    const dist = Math.sqrt(dx * dx + dy * dy)
+    if (dist < 6) continue // didn't move meaningfully
+
+    const ux = dx / dist
+    const uy = dy / dist
+    const line = svgEl('line', {
+      x1: String(from.x + ux * R),
+      y1: String(from.y + uy * R),
+      x2: String(to.x - ux * R),
+      y2: String(to.y - uy * R),
+      class: 'movement-arrow',
+      'marker-end': 'url(#movement-arrowhead)',
+    })
+    g.appendChild(line)
+  }
+
+  // Insert before player tokens so arrows render beneath them
+  const firstPlayer = svg.querySelector('[data-player]')
+  if (firstPlayer) {
+    svg.insertBefore(g, firstPlayer)
+  } else {
+    svg.appendChild(g)
   }
 }

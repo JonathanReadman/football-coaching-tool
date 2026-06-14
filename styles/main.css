@@ -126,9 +126,14 @@ body {
   pointer-events: none;
 }
 
-/* Player animation — CSS handles movement between steps */
-[data-player] {
-  transition: transform 0.5s ease-in-out;
+/* Movement arrows */
+.movement-arrow {
+  stroke: #facc15;
+  stroke-width: 1.5;
+  opacity: 0.9;
+}
+.movement-arrowhead {
+  fill: #facc15;
 }
 
 /* ── Zone Panel (bottom sheet) ── */

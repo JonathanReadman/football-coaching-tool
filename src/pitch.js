@@ -40,9 +40,6 @@ export function createPitchSVG(formation, activeZoneId, onZoneClick) {
   // Pitch background
   svg.appendChild(svgEl('rect', { x: '0', y: '0', width: '300', height: '200', class: 'pitch__bg' }))
 
-  // Centre line
-  svg.appendChild(svgEl('line', { x1: '0', y1: '100', x2: '300', y2: '100', class: 'pitch__line' }))
-
   // Centre circle
   svg.appendChild(svgEl('circle', { cx: '150', cy: '100', r: '25', class: 'pitch__circle' }))
 

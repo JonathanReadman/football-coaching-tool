@@ -49,18 +49,15 @@ export function createPitchSVG(formation, activeZoneId, onZoneClick) {
   // Player tokens
   const players = getPlayersByFormation(formation)
   for (const player of players) {
-    const g = svgEl('g', { 'data-player': player.id })
+    const g = svgEl('g', {
+      'data-player': player.id,
+      transform: `translate(${player.x},${player.y})`,
+    })
     g.appendChild(svgEl('circle', {
-      cx: String(player.x),
-      cy: String(player.y),
-      r: '8',
-      class: 'pitch__player',
+      cx: '0', cy: '0', r: '8', class: 'pitch__player',
     }))
     const label = svgEl('text', {
-      x: String(player.x),
-      y: String(player.y + 4),
-      'text-anchor': 'middle',
-      class: 'pitch__player-label',
+      x: '0', y: '4', 'text-anchor': 'middle', class: 'pitch__player-label',
     })
     label.textContent = player.label
     g.appendChild(label)
@@ -68,4 +65,17 @@ export function createPitchSVG(formation, activeZoneId, onZoneClick) {
   }
 
   return svg
+}
+
+/**
+ * Move player tokens to new positions. Each entry in positions maps a player id
+ * to an {x, y} coordinate. Players not listed are left unchanged.
+ * @param {SVGElement} svg
+ * @param {Record<string, {x: number, y: number}>} positions
+ */
+export function updatePlayerPositions(svg, positions) {
+  for (const [id, pos] of Object.entries(positions)) {
+    const g = svg.querySelector(`[data-player="${id}"]`)
+    if (g) g.setAttribute('transform', `translate(${pos.x},${pos.y})`)
+  }
 }

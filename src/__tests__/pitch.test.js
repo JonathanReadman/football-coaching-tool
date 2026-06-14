@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { createPitchSVG } from '../pitch.js'
+import { createPitchSVG, updatePlayerPositions } from '../pitch.js'
 
 describe('createPitchSVG', () => {
   it('returns an SVGElement', () => {
@@ -52,5 +52,36 @@ describe('createPitchSVG', () => {
     const labels = svg.querySelectorAll('[data-player]')
     const labelTexts = Array.from(labels).map(el => el.querySelector('text')?.textContent)
     expect(labelTexts).toContain('CDM')
+  })
+})
+
+describe('updatePlayerPositions', () => {
+  it('updates the transform of a player group', () => {
+    const svg = createPitchSVG('2-4-2', null, () => {})
+    updatePlayerPositions(svg, { GK: { x: 100, y: 50 } })
+    const gk = svg.querySelector('[data-player="GK"]')
+    expect(gk.getAttribute('transform')).toBe('translate(100,50)')
+  })
+
+  it('does not throw when player id is not in the svg', () => {
+    const svg = createPitchSVG('2-4-2', null, () => {})
+    expect(() => updatePlayerPositions(svg, { FAKE: { x: 10, y: 10 } })).not.toThrow()
+  })
+
+  it('updates multiple players in one call', () => {
+    const svg = createPitchSVG('2-4-2', null, () => {})
+    updatePlayerPositions(svg, {
+      GK: { x: 10, y: 20 },
+      LB: { x: 30, y: 40 },
+    })
+    expect(svg.querySelector('[data-player="GK"]').getAttribute('transform')).toBe('translate(10,20)')
+    expect(svg.querySelector('[data-player="LB"]').getAttribute('transform')).toBe('translate(30,40)')
+  })
+
+  it('leaves unmentioned players unchanged', () => {
+    const svg = createPitchSVG('2-4-2', null, () => {})
+    const rbBefore = svg.querySelector('[data-player="RB"]').getAttribute('transform')
+    updatePlayerPositions(svg, { GK: { x: 1, y: 1 } })
+    expect(svg.querySelector('[data-player="RB"]').getAttribute('transform')).toBe(rbBefore)
   })
 })

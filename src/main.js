@@ -54,6 +54,15 @@ function init() {
     activeZoneId = null
     hideZonePanel()
     renderPitch()
+
+    // If the play view is open, close it before refreshing the list
+    const playView = document.getElementById('play-view')
+    const playsList = document.getElementById('plays-list')
+    if (!playView.classList.contains('play-view--hidden')) {
+      playView.classList.add('play-view--hidden')
+      playsList.classList.remove('hidden')
+    }
+
     refreshPlaysView()
   })
 

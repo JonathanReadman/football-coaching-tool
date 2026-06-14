@@ -189,4 +189,17 @@ describe('renderPlayStep', () => {
     const g = svg.querySelector(`[data-player="${firstPlayerId}"]`)
     expect(g.getAttribute('transform')).toBe(`translate(${pos.x},${pos.y})`)
   })
+
+  it('does not throw when stepIndex is out of bounds', () => {
+    showPlayView(PLAYS[0], '2-4-2', () => {})
+    const svg = document.querySelector('#play-diagram svg')
+    expect(() => renderPlayStep(svg, PLAYS[0], 999, '2-4-2')).not.toThrow()
+  })
+
+  it('does not throw when formation has no positions for that step', () => {
+    showPlayView(PLAYS[0], '2-4-2', () => {})
+    const svg = document.querySelector('#play-diagram svg')
+    // PLAYS[0] only supports '2-4-2', so '3-4-1' has no positions
+    expect(() => renderPlayStep(svg, PLAYS[0], 0, '3-4-1')).not.toThrow()
+  })
 })

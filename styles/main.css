@@ -14,8 +14,7 @@
   --text: #f9fafb;
   --text-secondary: #9ca3af;
   --player-fill: #3b82f6;
-  --panel-width: 360px;
-  --header-height: 56px;
+  --tab-bar-height: 56px;
   --radius: 8px;
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
@@ -32,44 +31,49 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* ── Header ── */
-.app-header {
+/* ── Views ── */
+.view {
+  display: none;
+  height: calc(100dvh - var(--tab-bar-height));
+  overflow: hidden;
+  position: relative;
+}
+.view--active { display: flex; }
+.view--hidden { display: none; }
+
+/* ── Bottom tab bar ── */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--tab-bar-height);
+  background: var(--surface);
+  border-top: 1px solid var(--surface-2);
   display: flex;
   align-items: center;
-  gap: 12px;
-  height: var(--header-height);
-  padding: 0 16px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--surface-2);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  flex-wrap: wrap;
+  padding: 0 12px;
+  gap: 8px;
+  z-index: 300;
 }
-.app-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--accent);
-  white-space: nowrap;
-}
-.app-nav { display: flex; gap: 4px; }
-.nav-btn {
+.tab-btn {
+  flex: 1;
   background: none;
   border: 1px solid var(--surface-2);
   color: var(--text-secondary);
-  padding: 6px 14px;
+  padding: 8px 12px;
   border-radius: 20px;
   font-size: 0.875rem;
   cursor: pointer;
-  min-height: 44px;
+  min-height: 40px;
   transition: background 0.15s, color 0.15s;
 }
-.nav-btn--active, .nav-btn:hover {
+.tab-btn--active {
   background: var(--accent);
   color: #000;
   border-color: var(--accent);
+  font-weight: 700;
 }
-.app-controls { display: flex; gap: 8px; margin-left: auto; align-items: center; }
 #formation-select {
   background: var(--surface-2);
   color: var(--text);
@@ -77,28 +81,13 @@ body {
   padding: 6px 10px;
   border-radius: var(--radius);
   font-size: 0.875rem;
-  min-height: 44px;
+  min-height: 40px;
+  flex-shrink: 0;
 }
-.btn-print {
-  background: var(--surface-2);
-  color: var(--text);
-  border: 1px solid var(--surface-2);
-  padding: 6px 12px;
-  border-radius: var(--radius);
-  font-size: 0.875rem;
-  cursor: pointer;
-  min-height: 44px;
-}
-
-/* ── Views ── */
-.view { display: none; height: calc(100dvh - var(--header-height)); overflow: hidden; }
-.view--active { display: flex; }
-.view--hidden { display: none; }
 
 /* ── Zone Reference View ── */
 #view-zones {
-  position: relative;
-  flex-direction: row;
+  flex-direction: column;
 }
 .pitch-container {
   flex: 1;
@@ -111,7 +100,7 @@ body {
 .pitch-container svg {
   width: 100%;
   height: 100%;
-  max-height: calc(100dvh - var(--header-height) - 32px);
+  max-height: calc(100dvh - var(--tab-bar-height) - 32px);
   touch-action: manipulation;
 }
 
@@ -136,48 +125,48 @@ body {
   font-family: var(--font);
   pointer-events: none;
 }
-.pitch__arrow { stroke-width: 1.5; fill: none; }
-.pitch__arrow--pass { stroke: #facc15; stroke-dasharray: 4,2; }
-.pitch__arrow--run  { stroke: #38bdf8; stroke-dasharray: 4,2; }
-.pitch__arrow--ball { stroke: #fff; }
-.arrow-head--pass { fill: #facc15; }
-.arrow-head--run  { fill: #38bdf8; }
-.arrow-head--ball { fill: #fff; }
 
-/* ── Zone Panel ── */
+/* Player animation — CSS handles movement between steps */
+[data-player] {
+  transition: transform 0.5s ease-in-out;
+}
+
+/* ── Zone Panel (bottom sheet) ── */
 .panel {
-  width: var(--panel-width);
+  position: fixed;
+  bottom: var(--tab-bar-height);
+  left: 0;
+  right: 0;
+  height: 55dvh;
   background: var(--surface);
-  border-left: 1px solid var(--surface-2);
-  padding: 20px;
+  border-top: 2px solid var(--accent);
+  border-radius: 16px 16px 0 0;
+  padding: 16px 20px 20px;
   overflow-y: auto;
-  flex-shrink: 0;
-  position: relative;
-  transition: transform 0.2s ease;
+  z-index: 200;
+  transform: translateY(0);
+  transition: transform 0.25s ease;
 }
 .panel--hidden {
-  display: none;
+  transform: translateY(100%);
+  pointer-events: none;
 }
-.panel-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 1.2rem;
-  cursor: pointer;
-  min-width: 44px;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
+.panel-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--surface-2);
+  border-radius: 2px;
+  margin: 0 auto 16px;
 }
-.panel-close:hover { background: var(--surface-2); }
-.panel-title { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 16px; padding-right: 40px; }
+.panel-title { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 16px; }
 .panel-section { margin-bottom: 20px; }
-.panel-section-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 6px; }
+.panel-section-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
 .panel-section p, .panel-section blockquote {
   font-size: 0.9rem;
   line-height: 1.6;
@@ -191,16 +180,18 @@ blockquote {
 }
 
 /* ── Passages of Play View ── */
-#view-plays { flex-direction: row; }
-.plays-layout { display: flex; width: 100%; overflow: hidden; }
-.plays-nav {
-  width: 260px;
-  flex-shrink: 0;
+#view-plays {
+  flex-direction: column;
+  position: relative;
+}
+
+/* Plays list */
+.plays-list {
+  flex: 1;
   overflow-y: auto;
-  border-right: 1px solid var(--surface-2);
   padding: 16px;
 }
-.plays-theme { margin-bottom: 20px; }
+.plays-theme { margin-bottom: 24px; }
 .plays-theme h3 {
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -215,65 +206,120 @@ blockquote {
   background: none;
   border: 1px solid var(--surface-2);
   color: var(--text);
-  padding: 10px 12px;
+  padding: 14px 16px;
   border-radius: var(--radius);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   cursor: pointer;
-  margin-bottom: 6px;
-  min-height: 44px;
+  margin-bottom: 8px;
+  min-height: 56px;
   transition: background 0.15s;
 }
-.play-item:hover { background: var(--surface-2); }
-.play-viewer { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.play-item:hover, .play-item:active { background: var(--surface-2); }
+
+/* Hidden utility used by showPlayView */
+.hidden { display: none !important; }
+
+/* Full-screen play view */
+.play-view {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+.play-view--hidden { display: none; }
+
 .play-diagram {
-  flex: 0 0 45%;
-  padding: 12px;
+  flex: 0 0 55%;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 12px;
   border-bottom: 1px solid var(--surface-2);
+  overflow: hidden;
 }
-.play-diagram svg { width: 100%; height: 100%; }
-.play-detail { flex: 1; overflow-y: auto; padding: 20px; }
-.play-detail h2 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; color: var(--accent); }
-.play-steps { padding-left: 20px; margin-bottom: 16px; }
-.play-steps li { font-size: 0.9rem; line-height: 1.7; color: var(--text); margin-bottom: 6px; }
-.play-coaching-point {
-  font-size: 0.85rem;
-  font-style: italic;
+.play-diagram svg {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+}
+
+.play-step-info {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+.play-step-indicator {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--text-secondary);
-  border-left: 3px solid var(--accent);
-  padding-left: 12px;
+  margin-bottom: 8px;
+}
+.play-step-description {
+  font-size: 0.95rem;
   line-height: 1.6;
+  color: var(--text);
 }
 
-/* ── Mobile (≤ 640px) ── */
-@media (max-width: 640px) {
-  .app-title { display: none; }
-  .app-header { height: auto; min-height: var(--header-height); padding: 8px 12px; }
+.play-controls {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border-top: 1px solid var(--surface-2);
+}
+.play-ctrl-btn {
+  flex: 1;
+  background: var(--surface-2);
+  border: none;
+  color: var(--text);
+  padding: 12px;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  cursor: pointer;
+  min-height: 48px;
+  transition: background 0.15s;
+}
+.play-ctrl-btn:hover { background: var(--surface-2); filter: brightness(1.2); }
+.play-ctrl-btn:disabled { opacity: 0.35; cursor: default; }
+.play-ctrl-btn--back {
+  flex: 0 0 auto;
+  background: none;
+  border: 1px solid var(--surface-2);
+  color: var(--text-secondary);
+}
 
-  /* Zone panel slides up from bottom on mobile */
+/* ── Tablet (641px+) ── */
+@media (min-width: 641px) {
+  /* Zone panel becomes a sidebar rather than a full bottom sheet */
   .panel {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    width: 100%;
-    height: 60dvh;
-    border-left: none;
-    border-top: 2px solid var(--accent);
-    border-radius: 16px 16px 0 0;
-    z-index: 200;
+    position: static;
+    height: auto;
+    border-radius: 0;
+    border-top: none;
+    border-left: 1px solid var(--surface-2);
+    transform: none !important;
+    transition: none;
+    width: 360px;
+    flex-shrink: 0;
     overflow-y: auto;
   }
+  .panel--hidden { display: none; }
+  .panel-handle { display: none; }
 
-  /* Plays view stacks vertically */
-  #view-plays { flex-direction: column; }
-  .plays-layout { flex-direction: column; }
-  .plays-nav { width: 100%; height: 160px; border-right: none; border-bottom: 1px solid var(--surface-2); }
-  .plays-nav .plays-theme { display: flex; flex-wrap: wrap; gap: 6px; }
-  .play-diagram { flex: 0 0 35%; }
-}
+  #view-zones { flex-direction: row; }
 
-/* ── Tablet (641px – 1024px) ── */
-@media (min-width: 641px) and (max-width: 1024px) {
-  :root { --panel-width: 300px; }
+  /* Plays view splits to sidebar + viewer on tablet */
+  #view-plays { flex-direction: row; }
+  .plays-list {
+    width: 280px;
+    flex: none;
+    border-right: 1px solid var(--surface-2);
+  }
+  .play-view {
+    position: relative;
+    flex: 1;
+    inset: auto;
+  }
 }

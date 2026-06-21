@@ -47,7 +47,7 @@ export const FORMATIONS = {
       { id: 'CM',  label: 'CM',  x: 110, y: 95,  primaryZones: [5, 4, 6] },
       { id: 'CM2', label: 'CM',  x: 190, y: 95,  primaryZones: [5, 4, 6] },
       { id: 'RM',  label: 'RM',  x: 275, y: 100, primaryZones: [6, 3] },
-      { id: 'AM',  label: 'AM',  x: 150, y: 33,  primaryZones: [2, 1, 3] },
+      { id: 'AM',  label: 'ST',  x: 150, y: 33,  primaryZones: [2, 1, 3] },
     ],
   },
 }
